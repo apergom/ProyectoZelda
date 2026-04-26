@@ -1,43 +1,46 @@
-// Importamos la función de nuestro archivo api.js
 import { buscarZeldaAPI } from './api.js';
+import { obtenerFavoritos, agregarFavorito, quitarFavorito, vaciarFavoritos } from './favorites.js';
 
-// ==========================================
-// VARIABLES GLOBALES
-// ==========================================
 let temporizador;
 
-// ==========================================
-// REFERENCIAS AL HTML
-// ==========================================
+// REFERENCIAS HTML
 const inputBuscador = document.getElementById("input-buscador");
 const selectTipo = document.getElementById("tipo-busqueda");
 const cajaResultados = document.getElementById("resultados-busqueda");
 const mensajeBuscador = document.getElementById("mensaje-buscador");
 
-// ==========================================
+const cajaFavoritos = document.getElementById("resultados-favoritos");
+const selectFiltro = document.getElementById("filtrar-favoritos");
+const selectOrden = document.getElementById("ordenar-favoritos");
+const btnVaciar = document.getElementById("btn-vaciar-favoritos");
+
 // INICIO Y EVENTOS
-// ==========================================
+mostrarFavoritosUI();
 
 inputBuscador.addEventListener("input", alEscribir);
-
-
 selectTipo.addEventListener("change", ejecutarBusqueda);
 
-// ==========================================
-// FUNCIONES DEL BUSCADOR
-// ==========================================
+selectFiltro.addEventListener("change", mostrarFavoritosUI);
+selectOrden.addEventListener("change", mostrarFavoritosUI);
 
+btnVaciar.addEventListener("click", function() {
+    vaciarFavoritos();
+    mostrarFavoritosUI();
+    ejecutarBusqueda();
+});
+
+// ==========================================
+// BUSCADOR
+// ==========================================
 
 function alEscribir() {
-    clearTimeout(temporizador); // Borramos la cuenta atrás anterior
+    clearTimeout(temporizador);
     temporizador = setTimeout(ejecutarBusqueda, 500);
 }
 
-// Función principal que controla el proceso
 async function ejecutarBusqueda() {
     let palabra = inputBuscador.value.trim();
-    let categoria = selectTipo.value;
-
+    let categoria = selectTipo.value; // "characters" o "games"
 
     if (palabra === "") {
         cajaResultados.innerHTML = "";
@@ -45,60 +48,133 @@ async function ejecutarBusqueda() {
         return;
     }
 
-
     mensajeBuscador.textContent = "Buscando en Hyrule...";
     mensajeBuscador.style.color = "var(--color-parchment-white)";
     cajaResultados.innerHTML = "";
 
     try {
-
         let resultados = await buscarZeldaAPI(categoria, palabra);
 
-
         if (resultados.length === 0) {
-            mensajeBuscador.textContent = "No se encontró nada con ese nombre.";
+            mensajeBuscador.textContent = "No se encontró nada.";
             return;
         }
 
         mensajeBuscador.textContent = "";
-        dibujarTarjetasBuscador(resultados);
+
+        dibujarTarjetasBuscador(resultados, categoria);
 
     } catch (error) {
-
         mensajeBuscador.textContent = "Error al conectar con la API.";
         mensajeBuscador.style.color = "red";
-        console.error(error);
     }
 }
 
-// Esta función se encarga de crear el HTML de cada resultado
-function dibujarTarjetasBuscador(lista) {
+function dibujarTarjetasBuscador(lista, categoria) {
     cajaResultados.innerHTML = "";
-
+    let misFavs = obtenerFavoritos();
 
     for (let i = 0; i < lista.length; i++) {
         let item = lista[i];
-
-
         let tarjeta = document.createElement("article");
         tarjeta.className = "card";
 
-
-        let descripcion = item.description;
-        if (!descripcion) {
-            descripcion = "Sin descripción disponible.";
-        } else if (descripcion.length > 80) {
-            descripcion = descripcion.substring(0, 80) + "...";
+        let esFavorito = false;
+        for (let j = 0; j < misFavs.length; j++) {
+            if (misFavs[j].id_api === item.id) {
+                esFavorito = true;
+            }
         }
 
+        let descripcion = item.description || "Sin descripción disponible.";
+        if (descripcion.length > 80) descripcion = descripcion.substring(0, 80) + "...";
+
+        let claseBoton = esFavorito ? "btn btn--danger" : "btn";
+        let textoBoton = esFavorito ? "Quitar Favorito" : "Añadir a Favoritos";
 
         tarjeta.innerHTML = `
             <h3 class="card__title">${item.name}</h3>
             <p class="card__desc">${descripcion}</p>
-            <button class="btn" disabled>Añadir a Favoritos</button>
+            <button type="button" class="${claseBoton}">${textoBoton}</button>
         `;
 
+        let boton = tarjeta.querySelector("button");
+        boton.addEventListener("click", function() {
+            if (esFavorito) {
+                quitarFavorito(item.id);
+            } else {
+                agregarFavorito(item.id, item.name, categoria);
+            }
+            ejecutarBusqueda();
+            mostrarFavoritosUI();
+        });
 
         cajaResultados.appendChild(tarjeta);
+    }
+}
+
+// ==========================================
+// FAVORITOS (Filtros y Orden)
+// ==========================================
+
+function mostrarFavoritosUI() {
+    cajaFavoritos.innerHTML = "";
+    let listaFavs = obtenerFavoritos();
+
+    let filtro = selectFiltro.value;
+    let listaFiltrada = [];
+
+    // 1. FILTRAR
+    for (let i = 0; i < listaFavs.length; i++) {
+        let fav = listaFavs[i];
+
+
+        if (filtro === "todos" || fav.tipo === filtro) {
+            listaFiltrada.push(fav);
+        }
+    }
+
+
+    let orden = selectOrden.value;
+    if (orden === "az") {
+        listaFiltrada.sort(function(a, b) {
+            let nombreA = a.nombre.toLowerCase();
+            let nombreB = b.nombre.toLowerCase();
+            if (nombreA < nombreB) return -1;
+            if (nombreA > nombreB) return 1;
+            return 0;
+        });
+    } else if (orden === "recientes") {
+        listaFiltrada.sort(function(a, b) {
+            return b.fecha - a.fecha;
+        });
+    }
+
+    if (listaFiltrada.length === 0) {
+        cajaFavoritos.innerHTML = "<p style='color: var(--color-parchment-white);'>No tienes favoritos aquí.</p>";
+        return;
+    }
+
+    for (let i = 0; i < listaFiltrada.length; i++) {
+        let fav = listaFiltrada[i];
+        let tarjeta = document.createElement("article");
+        tarjeta.className = "card";
+
+        let tipoVisual = (fav.tipo === "games") ? "Juego" : "Personaje";
+
+        tarjeta.innerHTML = `
+            <h3 class="card__title">${fav.nombre}</h3>
+            <p class="card__desc">Categoría: ${tipoVisual}</p>
+            <button type="button" class="btn btn--danger">Eliminar</button>
+        `;
+
+        let botonEliminar = tarjeta.querySelector("button");
+        botonEliminar.addEventListener("click", function() {
+            quitarFavorito(fav.id_api);
+            mostrarFavoritosUI();
+            ejecutarBusqueda();
+        });
+
+        cajaFavoritos.appendChild(tarjeta);
     }
 }

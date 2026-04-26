@@ -140,12 +140,12 @@ body {
 
 
 .btn--danger {
-    background: var(--color-heart-red);
-    color: white;
+    background: var(--color-heart-red) !important;
+    color: white !important;
 }
 
-.btn--danger:hover:not(:disabled) {
-    background: #ff4747;
+.btn--danger:hover {
+    background: #ff4747 !important;
 }
 
 
