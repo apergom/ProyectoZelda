@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zelda Encyclopedia Web</title>
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script type="module" src="js/ui.js" defer></script>
 </head>
 <body>
+<header class="header">
+    <h1 class="header__title">Zelda Encyclopedia</h1>
+    <nav class="navigator-header">
+        <ul class="navigator-header__ul">
+            <li class="navigator-header__item"><a class="navigator-header__link" href="#buscador">Buscador</a></li>
+        </ul>
+    </nav>
+</header>
 
+<main class="main">
+
+    <section id="buscador" class="section">
+        <h2 class="main__heading">Buscador de la Saga</h2>
+        <form class="search-form" onsubmit="event.preventDefault()">
+            <fieldset class="search-form__fieldset">
+                <legend>Busca en Hyrule</legend>
+                <label>Categoría:</label>
+                <select id="tipo-busqueda" class="search-form__input">
+                    <option value="characters">Personajes</option>
+                    <option value="games">Juegos</option>
+                </select>
+
+                <label>Término de búsqueda:</label>
+                <input type="text" id="input-buscador" class="search-form__input" placeholder="Ej. Link, Zelda...">
+
+                <div id="mensaje-buscador" class="form-message" style="min-height: 20px; font-weight: bold; margin-top: 10px;"></div>
+            </fieldset>
+        </form>
+        <div id="resultados-busqueda" class="section-cards"></div>
+    </section>
+
+
+</main>
+
+<footer class="footer">
+    <p class="footer__text">Zelda Encyclopedia</p>
+</footer>
 </body>
 </html>
