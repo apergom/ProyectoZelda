@@ -1,5 +1,6 @@
 import { buscarZeldaAPI } from './api.js';
 import { obtenerFavoritos, agregarFavorito, quitarFavorito, vaciarFavoritos } from './favorites.js';
+import { leerArchivoXML, convertirACSV } from './transform.js';
 
 let temporizador;
 
@@ -13,6 +14,10 @@ const cajaFavoritos = document.getElementById("resultados-favoritos");
 const selectFiltro = document.getElementById("filtrar-favoritos");
 const selectOrden = document.getElementById("ordenar-favoritos");
 const btnVaciar = document.getElementById("btn-vaciar-favoritos");
+
+const btnCargarXML = document.getElementById("btn-cargar-xml");
+const btnExportarCSV = document.getElementById("btn-exportar-csv");
+const cajaXML = document.getElementById("resultados-xml");
 
 // INICIO Y EVENTOS
 mostrarFavoritosUI();
@@ -28,6 +33,9 @@ btnVaciar.addEventListener("click", function() {
     mostrarFavoritosUI();
     ejecutarBusqueda();
 });
+
+btnCargarXML.addEventListener("click", cargarYMostrarXML);
+btnExportarCSV.addEventListener("click", descargarArchivoCSV);
 
 // ==========================================
 // BUSCADOR
@@ -177,4 +185,58 @@ function mostrarFavoritosUI() {
 
         cajaFavoritos.appendChild(tarjeta);
     }
+}
+
+// ==========================================
+// FUNCIONES DE XML Y CSV
+// ==========================================
+
+let datosXMLGuardados = [];
+
+async function cargarYMostrarXML() {
+    btnCargarXML.textContent = "Cargando...";
+    cajaXML.innerHTML = "";
+
+    try {
+        datosXMLGuardados = await leerArchivoXML();
+
+        for (let i = 0; i < datosXMLGuardados.length; i++) {
+            let juego = datosXMLGuardados[i];
+
+            let tarjeta = document.createElement("article");
+            tarjeta.className = "card";
+
+            tarjeta.innerHTML = `
+                <h3 class="card__title">${juego.titulo}</h3>
+                <p class="card__desc" style="text-align: left;">
+                    <strong>Consola:</strong> ${juego.plataforma}<br>
+                    <strong>Año:</strong> ${juego.anio}<br>
+                    <strong>Puntos:</strong> ${juego.puntuacion}
+                </p>
+            `;
+            cajaXML.appendChild(tarjeta);
+        }
+
+        btnExportarCSV.disabled = false;
+
+    } catch (error) {
+        cajaXML.innerHTML = "<p style='color:var(--color-heart-red);'>Error al cargar el XML. ¿Creaste la carpeta data y el archivo juegos.xml?</p>";
+        console.error(error);
+    }
+
+    btnCargarXML.textContent = "Cargar XML";
+}
+
+function descargarArchivoCSV() {
+
+    if (datosXMLGuardados.length === 0) return;
+
+    let textoCSV = convertirACSV(datosXMLGuardados);
+
+    let archivoBlob = new Blob([textoCSV], { type: "text/csv;charset=utf-8;" });
+    let enlaceFalso = document.createElement("a");
+    enlaceFalso.href = URL.createObjectURL(archivoBlob);
+    enlaceFalso.download = "zelda_catalogo.csv";
+
+    enlaceFalso.click();
 }
