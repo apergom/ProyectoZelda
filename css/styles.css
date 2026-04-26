@@ -1,4 +1,5 @@
 :root {
+
     --color-forest-green: #1a261c;      /* Verde bosque oscuro (Fondo de secciones) */
     --color-hyrule-green: #244528;      /* Verde Hyrule (Elementos secundarios) */
     --color-abyss-green: #0f1a11;       /* Verde muy oscuro (Header/Footer) */
@@ -120,6 +121,70 @@ body {
     border-color: var(--color-triforce-gold);
 }
 
+/* ===== TARJETAS DE RESULTADOS (CARDS) ===== */
+.section-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.card {
+    background: #1f2e22;
+    border: 1px solid var(--color-leather-brown);
+    border-radius: 8px;
+    padding: 1rem;
+    width: 220px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(230, 177, 62, 0.2);
+    border-color: var(--color-antique-gold);
+}
+
+.card__title {
+    color: var(--color-triforce-gold);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.card__desc {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    color: var(--color-parchment-white);
+    flex-grow: 1;
+}
+
+/* ===== BOTONES ===== */
+.btn {
+    padding: 0.6rem 1.2rem;
+    background: var(--color-triforce-gold);
+    color: #000;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+    margin-top: auto;
+}
+
+.btn:hover:not(:disabled) {
+    background: var(--color-bright-yellow);
+}
+
+
+.btn:disabled {
+    background: var(--color-leather-brown);
+    cursor: not-allowed;
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 0.7;
+}
 
 /* ===== FOOTER ===== */
 .footer {
