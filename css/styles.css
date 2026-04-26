@@ -149,7 +149,7 @@ body {
 }
 
 
-/* ===== TARJETAS DE RESULTADOS (CARDS) ===== */
+/* ==== TARJETAS DE RESULTADOS (CARDS) ==== */
 .section-cards {
     display: flex;
     flex-wrap: wrap;
