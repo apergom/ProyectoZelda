@@ -1,0 +1,135 @@
+:root {
+    --color-forest-green: #1a261c;      /* Verde bosque oscuro (Fondo de secciones) */
+    --color-hyrule-green: #244528;      /* Verde Hyrule (Elementos secundarios) */
+    --color-abyss-green: #0f1a11;       /* Verde muy oscuro (Header/Footer) */
+    --color-leather-brown: #8c7b5b;     /* Marrón (Bordes y separadores) */
+    --color-antique-gold: #b89558;      /* Dorado oscuro */
+    --color-triforce-gold: #e6b13e;     /* Dorado Trifuerza (Botones y acentos) */
+    --color-bright-yellow: #ffd700;     /* Amarillo brillante (Títulos y enlaces) */
+    --color-heart-red: #d63031;         /* Rojo Corazón (Errores) */
+    --color-parchment-white: #f0e6d2;   /* Blanco pergamino (Texto general) */
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #121813;
+    color: var(--color-parchment-white);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.header {
+    background: var(--color-abyss-green);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    border-bottom: 3px solid var(--color-antique-gold);
+}
+.header__title {
+    color: var(--color-bright-yellow);
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.navigator-header__ul {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+    justify-content: center;
+    margin-top: 1rem;
+}
+.navigator-header__link {
+    color: var(--color-parchment-white);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+.navigator-header__link:hover {
+    color: var(--color-bright-yellow);
+}
+
+/* ===== MAIN Y SECCIONES ===== */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.section {
+    background: var(--color-forest-green);
+    border: 1px solid var(--color-leather-brown);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.main__heading {
+    color: var(--color-bright-yellow);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-leather-brown);
+    padding-bottom: 0.5rem;
+}
+
+/* ===== FORMULARIO DEL BUSCADOR ===== */
+.search-form__fieldset {
+    border: 1px solid var(--color-leather-brown);
+    padding: 1.5rem;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.search-form__fieldset legend {
+    color: var(--color-triforce-gold);
+    font-weight: bold;
+    padding: 0 0.5rem;
+}
+
+.search-form__fieldset label {
+    display: block;
+    margin-top: 0.5rem;
+    font-weight: bold;
+    color: var(--color-parchment-white);
+}
+
+.search-form__input {
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    background: #1f2e22;
+    color: var(--color-parchment-white);
+    border: 1px solid var(--color-leather-brown);
+    border-radius: 4px;
+}
+
+.search-form__input:focus {
+    outline: none;
+    border-color: var(--color-triforce-gold);
+}
+
+
+/* ===== FOOTER ===== */
+.footer {
+    background: var(--color-abyss-green);
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 3px solid var(--color-antique-gold);
+}
+
+.footer__text {
+    color: var(--color-antique-gold);
+    font-size: 0.9rem;
+}
