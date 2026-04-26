@@ -14,6 +14,7 @@
     <nav class="navigator-header">
         <ul class="navigator-header__ul">
             <li class="navigator-header__item"><a class="navigator-header__link" href="#buscador">Buscador</a></li>
+            <li class="navigator-header__item"><a class="navigator-header__link" href="#favoritos">Favoritos</a></li>
         </ul>
     </nav>
 </header>
@@ -34,10 +35,32 @@
                 <label>Término de búsqueda:</label>
                 <input type="text" id="input-buscador" class="search-form__input" placeholder="Ej. Link, Zelda...">
 
-                <div id="mensaje-buscador" class="form-message" style="min-height: 20px; font-weight: bold; margin-top: 10px;"></div>
+                <article id="mensaje-buscador" class="form-message" style="min-height: 20px; font-weight: bold; margin-top: 10px;"></article>
             </fieldset>
         </form>
-        <div id="resultados-busqueda" class="section-cards"></div>
+        <article id="resultados-busqueda" class="section-cards"></article>
+    </section>
+
+    <section id="favoritos" class="section">
+        <h2 class="main__heading">Mis Favoritos</h2>
+
+
+        <article class="filter-bar">
+            <select id="ordenar-favoritos" class="search-form__input">
+                <option value="recientes">Más recientes</option>
+                <option value="az">Nombre A-Z</option>
+            </select>
+
+            <select id="filtrar-favoritos" class="search-form__input">
+                <option value="todos">Todos los tipos</option>
+                <option value="characters">Personajes</option>
+                <option value="games">Juegos</option>
+            </select>
+
+            <button id="btn-vaciar-favoritos" class="btn btn--danger">Vaciar Favoritos</button>
+        </article>
+
+        <article id="resultados-favoritos" class="section-cards"></article>
     </section>
 
 
